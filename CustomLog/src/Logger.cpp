@@ -1,44 +1,7 @@
 #include "Logger.hpp"
 
-#include "ColorCode.hpp"
-#include "Format.hpp"
-
 namespace Custom {
 	namespace Log {
-		void Logger::Log(std::string message, Mode mode) {
-			std::string outputConsole = "";
-			std::string outputFile = "";
-			for (auto token : logFormat) {
-				if (token == "message") {
-					outputConsole += message;
-					outputFile += message;
-				}
-				else if (token == "timestamp") {
-					std::string token = GetTimestamp(timestampFormat);
-					outputConsole += token;
-					outputFile += token;
-				}
-				else if (token == "mode") {
-					std::string token = GetMode(mode);
-					outputConsole += token;
-					outputFile += token;
-				}
-				else if (token == "color ") outputConsole += GetColor(mode);
-				else if (token == "reset ") outputConsole += RESET;
-				else {
-					outputConsole += token;
-					outputFile += token;
-				}
-			}
-			std::cout << outputConsole << NEW_LINE;
-			if (file.is_open()) {
-				file << outputFile << NEW_LINE;
-			}
-			else {
-				std::cout << "Can not open log file..." << NEW_LINE;
-			}
-		}
-
 		void Logger::SetTimestampFormat(const std::string& format) { TimestampFormat(format); }
 		void Logger::SetLogFormat(const std::string& format) { LogFormat(format); }
 
@@ -108,46 +71,6 @@ namespace Custom {
 				}
 			}
 			return timestampFormat;
-		}
-
-		std::string Logger::GetMode(Mode mode) {
-			switch (mode) {
-			case trace: return "TRACE  ";
-			case debug: return "DEBUG  ";
-			case status: return "STATUS ";
-			case success: return "SUCCESS";
-			case error: return "ERROR  ";
-			case warn: return "WARN   ";
-			case fatal: return "FATAL  ";
-			case unknown: return "UNKNOWN";
-			}
-			return "Fatal  ";
-		}
-		std::string Logger::GetColor(Mode mode) {
-			switch (mode) {
-			case trace: return L_GRAY;
-			case debug: return BLUE;
-			case status: return GREEN;
-			case success: return D_GREEN;
-			case warn: return YELLOW;
-			case error: return RED;
-			case fatal: return D_RED;
-			case unknown: return PINK;
-			}
-			return ";";
-		}
-		std::string Logger::GetColor(Color color) {
-			switch (color) {
-			case lGray: return L_GRAY;
-			case blue: return BLUE;
-			case green: return GREEN;
-			case dGreen: return D_GREEN;
-			case yellow: return YELLOW;
-			case red: return RED;
-			case dRed: return D_RED;
-			case pink: return PINK;
-			}
-			return D_RED;
 		}
 
 		std::string Logger::GetTimestamp(const std::string& format) {
