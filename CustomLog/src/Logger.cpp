@@ -2,6 +2,9 @@
 
 namespace Custom {
 	namespace Log {
+		void Logger::SetBreakFormat(const std::string& format) {
+			breakFormat = format;
+		}
 		void Logger::SetTimestampFormat(const std::string& format) { TimestampFormat(format); }
 		void Logger::SetLogFormat(const std::string& format) { LogFormat(format); }
 
@@ -58,11 +61,21 @@ namespace Custom {
 					for (const std::string& t : timestampToken) {
 						if (currentFormat == t) {
 							if (currentFormat == "day")			currentFormat = DAY;
+							else if (currentFormat == "sDay")	currentFormat = SDAY;
+							else if (currentFormat == "fDay")	currentFormat = FDAY;
+
 							else if (currentFormat == "month")	currentFormat = MONTH;
-							else if (currentFormat == "year")	currentFormat = YEAR;
+							else if (currentFormat == "sMonth")	currentFormat = SMONTH;
+							else if (currentFormat == "fMonth")	currentFormat = FMONTH;
+
+							else if (currentFormat == "sYear")	currentFormat = SYEAR;
+							else if (currentFormat == "fYear")	currentFormat = FYEAR;
+
 							else if (currentFormat == "second") currentFormat = SECOND;
 							else if (currentFormat == "minute") currentFormat = MINUTE;
 							else if (currentFormat == "hour")	currentFormat = HOUR;
+
+							else if (currentFormat == "timezone")	currentFormat = TIMEZONE;
 							timestampFormat += currentFormat;
 							i = j;
 							break;
@@ -77,8 +90,8 @@ namespace Custom {
 			time_t now = time(0);
 			tm* timeinfo = localtime(&now);
 
-			char timestamp[50];
-			strftime(timestamp, 50, format.c_str(), timeinfo);
+			char timestamp[100];
+			strftime(timestamp, 100, format.c_str(), timeinfo);
 
 			return timestamp;
 		}

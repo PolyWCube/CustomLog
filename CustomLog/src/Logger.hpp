@@ -20,13 +20,19 @@ namespace Custom {
 		enum Mode { trace, debug, status, success, warn, error, fatal, unknown };
 		enum Color { lGray, blue, green, dGreen, yellow, red, dRed, pink };
 
-		const std::string timestampToken[23]{
+		const std::string timestampToken[29]{
 			"day",
+			"sDay",
+			"fDay",
 			"month",
-			"year",
+			"sMonth",
+			"fMonth",
+			"sYear",
+			"fYear",
 			"second",
 			"minute",
 			"hour",
+			"timezone",
 			"/", "|", ":", ";", "-", "+",
 			"[", "]", "(", ")", "{", "}", "<", ">",
 			",", ".", " "
@@ -45,8 +51,14 @@ namespace Custom {
 
 		class Logger {
 		public:
-			Logger(const std::string& logDirectory = "./log/", const std::string& fileFormat = "day-month-year...hour-minute", const std::string& timestampFormat = "second:minute:hour", const std::string& logFormat = "[timestamp] color mode reset : message") : timestampFormat(TimestampFormat(timestampFormat)), fileFormat(TimestampFormat(fileFormat) + ".txt"), logDirectory(logDirectory) {
+			Logger(const std::string& logDirectory = "./log/",
+				const std::string& fileFormat = "day-month-fYear...hour-minute",
+				const std::string& timestampFormat = "fDay/fMonth-day/month/fYear|second:minute:hour|timezone",
+				const std::string& logFormat = "[timestamp] color mode reset : message", const std::string& breakFormat = "-----------------------------------------------------------------------------------"
+			) : timestampFormat(TimestampFormat(timestampFormat)), fileFormat(TimestampFormat(fileFormat) + ".txt"), logDirectory(logDirectory) {
+
 				LogFormat(logFormat);
+				SetBreakFormat(breakFormat);
 
 				std::filesystem::create_directory(logDirectory);
 
@@ -90,6 +102,20 @@ namespace Custom {
 				}
 			}
 
+			void Break() {
+				std::string outputConsole = breakFormat;
+				std::string outputFile = breakFormat;
+				std::cout << outputConsole << NEW_LINE;
+				if (file.is_open()) {
+					file << outputFile << NEW_LINE;
+				}
+				else {
+					std::cout << "Can not open log file..." << NEW_LINE;
+				}
+			}
+
+			void SetBreakFormat(const std::string& format);
+
 			void SetTimestampFormat(const std::string& format);
 			void SetLogFormat(const std::string& format);
 
@@ -102,6 +128,10 @@ namespace Custom {
 			std::string TimestampFormat(std::string format);
 
 			inline std::string GetTimestamp(const std::string& format);
+
+			inline std::string GetString(std::string_view stringView) {
+				return { stringView.data(), stringView.size() };
+			}
 
 			template <typename T>
 			inline std::string GetStream(const T& val) {
@@ -168,6 +198,7 @@ namespace Custom {
 			std::vector<std::string> logFormat;
 			std::string timestampFormat;
 			std::string fileFormat;
+			std::string breakFormat;
 		};
 	}
 }
