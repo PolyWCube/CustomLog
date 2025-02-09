@@ -27,10 +27,17 @@ build:
 	${MAKE} compile-source
 	${MAKE} compile-example
 	${MAKE} compile-benchmark
+rebuild:
+	${MAKE} clean
+	${MAKE} build
 
 compile-example: $(EXAMPLE_EXECUTE)
 compile-benchmark: $(BENCHMARK_EXECUTE)
 compile-source: $(SOURCE_LIBRARY)
+recompile:
+	${MAKE} compile-example: $(EXAMPLE_EXECUTE)
+	${MAKE} compile-benchmark: $(BENCHMARK_EXECUTE)
+	${MAKE} compile-source: $(SOURCE_LIBRARY)
 
 $(EXAMPLE_EXECUTE): $(SOURCE_LIBRARY) $(OBJECT_DIRECTORY)/example.o
 	$(CXX) $(CXX_FLAG) -L$(LIBRARY_DIRECTORY) -l$(LIBRARY) -Wl,-rpath=$(LIBRARY_DIRECTORY) $(OBJECT_DIRECTORY)/example.o -o $(EXAMPLE_EXECUTE)
