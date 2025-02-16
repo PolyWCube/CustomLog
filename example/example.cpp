@@ -27,20 +27,27 @@ struct Character {
 };
 
 int main() {
-	double pi = 3.14159265359;
+	Custom::Log::SET_file("log/", true);
+
+	Custom::Log::Program("Hello world\n");
+
 	Custom::Log::Trace("This is the start of the example.");
+
+	double pi = 3.14159265359;
 	Custom::Log::Info("You can log out variable. Pi is equal to: ", pi);
+	
 	int status = 1;
 	Custom::Log::Success("Log out status. ", (status) ? "Logging successfully..." : "");
-	
+
 	Custom::Log::Warn("Internet connection lost...");
 	Character character(1430, "PWC");
 	Custom::Log::Error("Create a rich log informations with custom data type (using ostream operator).", " An error have occurred(!). Error code ", 404, " by user ", character);
 	Custom::Log::Fatal("Or custom color and level text by macro. ", "SYSTEM FAILED");
 
-	std::string_view example = "So basically, you can create your very own log level.";
+	std::string_view example = "So basically, you can create your very own log level.\n";
 	Custom::Log::CustomL(example);
-	Custom::Log::CustomL("AND THIS IS CUSTOM LOG :>");
+
+	Custom::Log::Program("AND THIS IS CUSTOM LOG :>");
 
 	int a;
 	std::cin >> a;

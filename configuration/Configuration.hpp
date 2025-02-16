@@ -1,6 +1,26 @@
-#ifndef FORMATCODE
-#define FORMATCODE
+#ifndef CONFIGURATION
+#define CONFIGURATION
 
+// USER DEFINE FORMAT
+#define TIMESTAMP_FORMAT "[" SDAY "-" SMONTH "-" SYEAR "|" SECOND ":" MINUTE ":" HOUR "] "
+/*
+SYSTEM FILE NAMING - FORBIDDEN ASCII CHARACTER
+Linux/Unix:
+	/ (forward slash)
+Windows:
+	< (less than)
+	> (greater than)
+	: (colon - sometimes works, but is actually NTFS Alternate Data Streams)
+	" (double quote)
+	/ (forward slash)
+	\ (backslash)
+	| (vertical bar or pipe)
+	? (question mark)
+	* (asterisk)
+*/
+#define FILE_NAME_FORMAT "logfile_" SDAY "-" SMONTH "-" SYEAR "_" HOUR "-" MINUTE "'-" SECOND "''" ".txt"
+
+// SYSTEM FORMAT - DO NOT MODIFY WITHOUT CARE
 // TIMESTAMP FORMAT
 #define DAY "%d"
 #define SDAY "%a"
@@ -48,8 +68,5 @@
 
 // ASCII CLEAR CODE
 #define CLEAR "\x1b[2J"
-
-// USER DEFINE
-#define TIMESTAMP_FORMAT SDAY "-" SMONTH "-" SYEAR "|" SECOND ":" MINUTE ":" HOUR "|" TIMEZONE
 
 #endif

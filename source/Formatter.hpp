@@ -1,7 +1,7 @@
 #ifndef FORMATTER
 #define FORMATTER
 
-#include "FormatCode.hpp"
+#include "../configuration/Configuration.hpp"
 
 #include <string>
 #include <sstream>
@@ -10,6 +10,8 @@
 
 namespace Custom {
 	namespace Log {
+		constexpr size_t BUFFER_SIZE_T = 100;
+
 		template <typename T>
 		concept Streamable = requires(std::ostream& os, const T& t) {
 			os << t;
@@ -37,24 +39,23 @@ namespace Custom {
 			time_t now = time(0);
 			tm* timeinfo = localtime(&now);
 
-			char timestamp[100];
-			strftime(timestamp, 100, timestampFormat.c_str(), timeinfo);
+			std::array<char, BUFFER_SIZE_T> timestamp;
+			strftime(timestamp.data(), timestamp.size(), timestampFormat.c_str(), timeinfo);
 
-			return timestamp;
+			return std::string(timestamp.data());
+		}
+
+		const std::string fileNameFormat = FILE_NAME_FORMAT;
+		inline std::string GET_fileName() {
+			time_t now = time(0);
+			tm* timeinfo = localtime(&now);
+
+			std::array<char, BUFFER_SIZE_T> fileName;
+			strftime(fileName.data(), fileName.size(), fileNameFormat.c_str(), timeinfo);
+
+			return std::string(fileName.data());
 		}
 	}
-}
-
-#define DEFINE_LOG_LEVEL(level, fg_color, bg_color) \
-namespace Custom { \
-	namespace Log { \
-		template <typename... Args> \
-		inline constexpr void level(const Args&... message) { \
-			std::stringstream os; \
-			os << fg_color << bg_color << #level << ": " << Custom::Log::GET_string(message...) << RESET_COLOR; \
-			std::cout << os.str() << NEW_LINE; \
-		} \
-	} \
 }
 
 #endif
